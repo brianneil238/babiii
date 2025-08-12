@@ -53,18 +53,6 @@ function App() {
 
   // Auto-progression sequence: Greet → Flowers → Letter → Album
   useEffect(() => {
-    if (showGiftButton) {
-      // Wait 15 seconds on gift button, then show flowers
-      const flowerTimer = setTimeout(() => {
-        setShowGiftButton(false);
-        setShowFlowers(true);
-      }, 15000);
-
-      return () => clearTimeout(flowerTimer);
-    }
-  }, [showGiftButton]);
-
-  useEffect(() => {
     if (showFlowers) {
       // Show flowers for 15 seconds, then show letter
       const letterTimer = setTimeout(() => {
@@ -247,7 +235,10 @@ function App() {
                   I have something for you...
                 </p>
                 <button
-                  onClick={() => setShowFlowers(true)}
+                  onClick={() => {
+                    setShowGiftButton(false);
+                    setShowFlowers(true);
+                  }}
                   style={{
                     background: 'rgba(255, 215, 0, 0.9)',
                     color: '#1a1a1a',
