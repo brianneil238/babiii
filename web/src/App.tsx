@@ -1,69 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
-import styled from 'styled-components'
-import { QRCodeCanvas } from 'qrcode.react'
-import FlowerAnimation from './FlowerAnimation';
-import PhotoAlbum from './PhotoAlbum';
-
-const images = [
-  // Replace these URLs with your own images or add more
-  'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80',
-]
-
-const messages = [
-  'Happy Birthday! Wishing you a day filled with love and joy!',
-  'May your birthday be as wonderful as you are!',
-  'Cheers to another year of amazing adventures!'
-]
-
-const Container = styled.div`
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 1rem;
-  text-align: center;
-  font-family: 'Segoe UI', sans-serif;
-`
-
-const Gallery = styled.div`
-  display: flex;
-  overflow-x: auto;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  scroll-snap-type: x mandatory;
-`
-
-const Image = styled.img`
-  width: 220px;
-  height: 320px;
-  object-fit: cover;
-  border-radius: 1rem;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-  scroll-snap-align: start;
-`
-
-const MessageList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 2rem 0 1rem 0;
-`
-
-const Message = styled.li`
-  background: #fffbe7;
-  margin: 0.5rem 0;
-  padding: 1rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  font-size: 1.1rem;
-`
-
-const QRSection = styled.div`
-  margin: 2rem 0 1rem 0;
-`
+import './App.css'
+import FlowerAnimation from './FlowerAnimation'
+import PhotoAlbum from './PhotoAlbum'
 
 function App() {
-  const [showQR, setShowQR] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [countdown, setCountdown] = useState<number | null>(null)
   const [wordIndex, setWordIndex] = useState<number | null>(null)
   const [showGiftButton, setShowGiftButton] = useState(false);
@@ -73,7 +13,6 @@ function App() {
   const [audioStarted, setAudioStarted] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [userInteracted, setUserInteracted] = useState(false);
-  const url = window.location.origin
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
   const words = ['HAPPY', 'BIRTHDAY', 'BABIII', 'ILOVEYOUUU']
@@ -234,7 +173,6 @@ function App() {
 
   // Falling text effect
   useEffect(() => {
-    if (loading) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -266,7 +204,7 @@ function App() {
     }
     draw();
     return () => cancelAnimationFrame(animationFrameId);
-  }, [loading]);
+  }, []);
 
   return (
     <>
@@ -428,7 +366,7 @@ function App() {
           <div style={{ position: 'relative', zIndex: 5 }}>
             <FlowerAnimation />
           </div>
-        ) : (loading || countdown !== null || wordIndex !== null || showGiftButton) && (
+        ) : (wordIndex !== null || showGiftButton) && (
           <div style={{ 
             position: 'fixed', 
             top: 0, 
@@ -442,18 +380,6 @@ function App() {
             alignItems: 'center',
             padding: 'clamp(10px, 3vw, 20px)'
           }}>
-            {/* Loading spinner */}
-            {loading && (
-              <div style={{
-                fontSize: 'clamp(24px, 8vw, 48px)',
-                color: '#ffe066',
-                textAlign: 'center',
-                animation: 'spin 1s linear infinite'
-              }}>
-                ⭐
-              </div>
-            )}
-
             {/* Countdown */}
             {countdown !== null && (
               <div style={{
