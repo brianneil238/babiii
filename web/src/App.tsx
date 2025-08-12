@@ -137,10 +137,8 @@ function App() {
   // Auto-progression sequence: Greet → Flowers → Letter → Album
   useEffect(() => {
     if (showGiftButton) {
-      console.log('🎁 Gift button shown, starting 15 second timer for flowers...');
       // Wait 15 seconds on gift button, then show flowers
       const flowerTimer = setTimeout(() => {
-        console.log('🌸 Timer finished, showing flowers now!');
         setShowGiftButton(false);
         setShowFlowers(true);
       }, 15000);
@@ -151,10 +149,8 @@ function App() {
 
   useEffect(() => {
     if (showFlowers) {
-      console.log('🌸 Flowers shown, starting 15 second timer for letter...');
       // Show flowers for 15 seconds, then show letter
       const letterTimer = setTimeout(() => {
-        console.log('💌 Timer finished, showing letter now!');
         setShowFlowers(false);
         setShowLetter(true);
       }, 15000);
@@ -165,13 +161,11 @@ function App() {
 
   useEffect(() => {
     if (showLetter) {
-      console.log('💌 Letter shown, starting 15 second timer for photo album...');
       // Show letter for 15 seconds, then show photo album
       const albumTimer = setTimeout(() => {
-        console.log('📸 Timer finished, showing photo album now!');
         setShowLetter(false);
         setShowPhotoAlbum(true);
-      }, 8000); // Reduced to 8 seconds for testing
+      }, 15000);
 
       return () => clearTimeout(albumTimer);
     }
@@ -322,40 +316,13 @@ function App() {
           }}
         />
         
-        {/* Debug display */}
-        <div style={{ 
-          position: 'fixed', 
-          top: '10px', 
-          right: '10px', 
-          background: 'rgba(0,0,0,0.8)', 
-          color: 'white', 
-          padding: '10px', 
-          borderRadius: '5px',
-          fontSize: '12px',
-          zIndex: 1000,
-          fontFamily: 'monospace'
-        }}>
-          <div>showGiftButton: {showGiftButton ? 'true' : 'false'}</div>
-          <div>showFlowers: {showFlowers ? 'true' : 'false'}</div>
-          <div>showLetter: {showLetter ? 'true' : 'false'}</div>
-          <div>showPhotoAlbum: {showPhotoAlbum ? 'true' : 'false'}</div>
-          <div>wordIndex: {wordIndex !== null ? wordIndex : 'null'}</div>
-          <div>countdown: {countdown !== null ? countdown : 'null'}</div>
-        </div>
-
         {/* Overlay loading/countdown/words on top of matrix effect */}
         {showPhotoAlbum ? (
           <div>
-            <div style={{ position: 'fixed', top: '10px', left: '10px', background: 'red', color: 'white', padding: '10px', zIndex: 1000 }}>
-              DEBUG: Photo Album Active
-            </div>
             <PhotoAlbum onClose={() => setShowPhotoAlbum(false)} />
           </div>
         ) : showLetter ? (
           <div>
-            <div style={{ position: 'fixed', top: '10px', left: '10px', background: 'blue', color: 'white', padding: '10px', zIndex: 1000 }}>
-              DEBUG: Letter Active
-            </div>
             <div style={{ position: 'relative', zIndex: 5 }}>
               <div style={{ 
                 position: 'fixed', 
@@ -401,9 +368,6 @@ function App() {
           </div>
         ) : showFlowers ? (
           <div>
-            <div style={{ position: 'fixed', top: '10px', left: '10px', background: 'green', color: 'white', padding: '10px', zIndex: 1000 }}>
-              DEBUG: Flowers Active
-            </div>
             <div style={{ position: 'relative', zIndex: 5 }}>
               <FlowerAnimation />
             </div>
