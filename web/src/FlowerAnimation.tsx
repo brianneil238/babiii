@@ -109,46 +109,6 @@ export default function FlowerAnimation() {
           ⭐
         </div>
       ))}
-
-      {/* Main message */}
-      <div className="main-message" style={{
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        textAlign: 'center',
-        color: '#ff6b6b',
-        zIndex: 15,
-        background: 'rgba(255, 255, 255, 0.9)',
-        padding: 'clamp(20px, 5vw, 40px)',
-        borderRadius: 'clamp(20px, 5vw, 30px)',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-        maxWidth: '90vw',
-        backdropFilter: 'blur(10px)'
-      }}>
-        <h1 style={{
-          fontSize: 'clamp(24px, 8vw, 48px)',
-          margin: '0 0 clamp(15px, 4vw, 25px) 0',
-          color: '#ff6b6b',
-          textShadow: '0 2px 10px rgba(255, 107, 107, 0.3)'
-        }}>
-          🌸 Happy Birthday, My Love! 🌸
-        </h1>
-        <p style={{
-          fontSize: 'clamp(16px, 4vw, 20px)',
-          margin: '0 0 clamp(20px, 5vw, 30px) 0',
-          color: '#666',
-          lineHeight: 1.5
-        }}>
-          May your day be as beautiful and special as you are to me! 💕
-        </p>
-        <div style={{
-          fontSize: 'clamp(32px, 10vw, 64px)',
-          animation: 'heartbeat 1.5s ease-in-out infinite'
-        }}>
-          🎂🎉🎁
-        </div>
-      </div>
     </div>
   );
 } 
