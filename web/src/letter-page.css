@@ -1,0 +1,339 @@
+.letter-page {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  overflow: hidden;
+}
+
+.letter-page.visible {
+  opacity: 1;
+}
+
+.letter-background {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-hearts {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.floating-heart {
+  position: absolute;
+  font-size: 1.5rem;
+  animation: float-up 5s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.7; }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.letter-container {
+  position: relative;
+  z-index: 10;
+  max-width: 500px;
+  width: 80%;
+  perspective: 1000px;
+  margin-top: -100px;
+}
+
+.letter-paper {
+  background: linear-gradient(145deg, #fff9f0, #fff5e6);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transform: rotateY(-5deg) rotateX(5deg);
+  transition: transform 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.letter-paper:hover {
+  transform: rotateY(0deg) rotateX(0deg);
+}
+
+.letter-header {
+  text-align: center;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.rose-decoration {
+  font-size: 1.8rem;
+  animation: gentle-bounce 2s ease-in-out infinite;
+}
+
+@keyframes gentle-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.letter-title {
+  font-family: 'Georgia', serif;
+  font-size: 1.8rem;
+  color: #e74c3c;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  line-height: 1.2;
+}
+
+.letter-content {
+  margin: 30px 0;
+}
+
+.letter-paragraph {
+  font-family: 'Georgia', serif;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #34495e;
+  margin: 15px 0;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease;
+  text-align: justify;
+}
+
+.letter-paragraph.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.letter-paragraph:first-of-type {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #e74c3c;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.letter-paragraph:nth-of-type(6) {
+  text-align: center;
+  font-weight: bold;
+  color: #e74c3c;
+  margin-top: 25px;
+}
+
+.letter-paragraph:last-of-type {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.letter-footer {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 2px solid rgba(231, 76, 60, 0.3);
+}
+
+.heart-divider {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.date {
+  font-family: 'Georgia', serif;
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  font-style: italic;
+  margin: 0;
+}
+
+.close-button {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 1.5rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 20;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
+/* Music Player Styles */
+.music-player {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 20px;
+  z-index: 20;
+  min-width: 280px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.music-player:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.music-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.play-button {
+  background: linear-gradient(45deg, #e74c3c, #c0392b);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.play-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+.music-info {
+  flex: 1;
+  color: white;
+}
+
+.song-title {
+  display: block;
+  font-family: 'Georgia', serif;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.time-display {
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.volume-icon {
+  font-size: 1.2rem;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.volume-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #e74c3c, #c0392b);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #e74c3c, #c0392b);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive design for music player */
+@media (max-width: 768px) {
+  .music-player {
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    min-width: auto;
+    padding: 15px;
+  }
+  
+  .music-controls {
+    gap: 12px;
+  }
+  
+  .play-button {
+    width: 45px;
+    height: 45px;
+    font-size: 1.3rem;
+  }
+  
+  .song-title {
+    font-size: 1rem;
+  }
+  
+  .time-display {
+    font-size: 0.8rem;
+  }
+}

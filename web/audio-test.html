@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #ffe066;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border: 1px solid #ffe066;
+        }
+        button {
+            background: #ffe066;
+            color: #1a1a1a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #ffd700;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success { background: #2d5a2d; }
+        .error { background: #5a2d2d; }
+        .info { background: #2d2d5a; }
+    </style>
+</head>
+<body>
+    <h1>🎵 Audio Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Direct Audio Element</h2>
+        <audio id="testAudio" controls preload="auto">
+            <source src="/birthday-song.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <div id="audioStatus" class="status info">Audio element created</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Programmatic Play</h2>
+        <button onclick="testPlay()">Test Play</button>
+        <button onclick="testLoad()">Test Load</button>
+        <div id="playStatus" class="status info">Ready to test</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: File Information</h2>
+        <button onclick="checkFile()">Check File</button>
+        <div id="fileStatus" class="status info">Click to check file</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Browser Audio Support</h2>
+        <div id="browserStatus" class="status info">Checking browser support...</div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('testAudio');
+        const audioStatus = document.getElementById('audioStatus');
+        const playStatus = document.getElementById('playStatus');
+        const fileStatus = document.getElementById('fileStatus');
+        const browserStatus = document.getElementById('browserStatus');
+
+        // Check browser audio support
+        function checkBrowserSupport() {
+            const audio = new Audio();
+            const canPlayMP3 = audio.canPlayType('audio/mpeg');
+            const canPlayOGG = audio.canPlayType('audio/ogg');
+            
+            browserStatus.innerHTML = `
+                <strong>Browser Audio Support:</strong><br>
+                MP3: ${canPlayMP3 || 'Not supported'}<br>
+                OGG: ${canPlayOGG || 'Not supported'}<br>
+                Audio Element: ${!!document.createElement('audio') ? 'Supported' : 'Not supported'}
+            `;
+            
+            if (canPlayMP3 || canPlayOGG) {
+                browserStatus.className = 'status success';
+            } else {
+                browserStatus.className = 'status error';
+            }
+        }
+
+        // Test programmatic play
+        function testPlay() {
+            playStatus.innerHTML = 'Attempting to play...';
+            playStatus.className = 'status info';
+            
+            audio.play().then(() => {
+                playStatus.innerHTML = '✅ Play successful!';
+                playStatus.className = 'status success';
+            }).catch(error => {
+                playStatus.innerHTML = `❌ Play failed: ${error.message}`;
+                playStatus.className = 'status error';
+                console.error('Play error:', error);
+            });
+        }
+
+        // Test loading
+        function testLoad() {
+            playStatus.innerHTML = 'Loading audio...';
+            playStatus.className = 'status info';
+            
+            audio.load();
+            
+            audio.addEventListener('canplaythrough', () => {
+                playStatus.innerHTML = '✅ Audio loaded successfully!';
+                playStatus.className = 'status success';
+            }, { once: true });
+            
+            audio.addEventListener('error', (e) => {
+                playStatus.innerHTML = '❌ Audio loading failed';
+                playStatus.className = 'status error';
+                console.error('Load error:', e);
+            }, { once: true });
+        }
+
+        // Check file accessibility
+        async function checkFile() {
+            fileStatus.innerHTML = 'Checking file...';
+            fileStatus.className = 'status info';
+            
+            try {
+                const response = await fetch('/birthday-song.mp3', { method: 'HEAD' });
+                if (response.ok) {
+                    const size = response.headers.get('content-length');
+                    fileStatus.innerHTML = `✅ File accessible! Size: ${(size / 1024 / 1024).toFixed(2)} MB`;
+                    fileStatus.className = 'status success';
+                } else {
+                    fileStatus.innerHTML = `❌ File not accessible: ${response.status} ${response.statusText}`;
+                    fileStatus.className = 'status error';
+                }
+            } catch (error) {
+                fileStatus.innerHTML = `❌ File check failed: ${error.message}`;
+                fileStatus.className = 'status error';
+            }
+        }
+
+        // Audio event listeners
+        audio.addEventListener('loadstart', () => {
+            audioStatus.innerHTML = '🔄 Audio loading started';
+            audioStatus.className = 'status info';
+        });
+
+        audio.addEventListener('canplay', () => {
+            audioStatus.innerHTML = '✅ Audio can play';
+            audioStatus.className = 'status success';
+        });
+
+        audio.addEventListener('canplaythrough', () => {
+            audioStatus.innerHTML = '✅ Audio fully loaded and ready';
+            audioStatus.className = 'status success';
+        });
+
+        audio.addEventListener('error', (e) => {
+            audioStatus.innerHTML = '❌ Audio error occurred';
+            audioStatus.className = 'status error';
+            console.error('Audio error:', e);
+        });
+
+        // Initialize
+        checkBrowserSupport();
+        checkFile();
+    </script>
+</body>
+</html>
