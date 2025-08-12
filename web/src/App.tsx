@@ -137,8 +137,10 @@ function App() {
   // Auto-progression sequence: Greet → Flowers → Letter → Album
   useEffect(() => {
     if (showGiftButton) {
+      console.log('🎁 Gift button shown, starting 15 second timer for flowers...');
       // Wait 15 seconds on gift button, then show flowers
       const flowerTimer = setTimeout(() => {
+        console.log('🌸 Timer finished, showing flowers now!');
         setShowGiftButton(false);
         setShowFlowers(true);
       }, 15000);
@@ -149,8 +151,10 @@ function App() {
 
   useEffect(() => {
     if (showFlowers) {
+      console.log('🌸 Flowers shown, starting 15 second timer for letter...');
       // Show flowers for 15 seconds, then show letter
       const letterTimer = setTimeout(() => {
+        console.log('💌 Timer finished, showing letter now!');
         setShowFlowers(false);
         setShowLetter(true);
       }, 15000);
@@ -161,11 +165,13 @@ function App() {
 
   useEffect(() => {
     if (showLetter) {
+      console.log('💌 Letter shown, starting 15 second timer for photo album...');
       // Show letter for 15 seconds, then show photo album
       const albumTimer = setTimeout(() => {
+        console.log('📸 Timer finished, showing photo album now!');
         setShowLetter(false);
         setShowPhotoAlbum(true);
-      }, 15000);
+      }, 8000); // Reduced to 8 seconds for testing
 
       return () => clearTimeout(albumTimer);
     }
@@ -316,55 +322,91 @@ function App() {
           }}
         />
         
+        {/* Debug display */}
+        <div style={{ 
+          position: 'fixed', 
+          top: '10px', 
+          right: '10px', 
+          background: 'rgba(0,0,0,0.8)', 
+          color: 'white', 
+          padding: '10px', 
+          borderRadius: '5px',
+          fontSize: '12px',
+          zIndex: 1000,
+          fontFamily: 'monospace'
+        }}>
+          <div>showGiftButton: {showGiftButton ? 'true' : 'false'}</div>
+          <div>showFlowers: {showFlowers ? 'true' : 'false'}</div>
+          <div>showLetter: {showLetter ? 'true' : 'false'}</div>
+          <div>showPhotoAlbum: {showPhotoAlbum ? 'true' : 'false'}</div>
+          <div>wordIndex: {wordIndex !== null ? wordIndex : 'null'}</div>
+          <div>countdown: {countdown !== null ? countdown : 'null'}</div>
+        </div>
+
         {/* Overlay loading/countdown/words on top of matrix effect */}
         {showPhotoAlbum ? (
-          <PhotoAlbum onClose={() => setShowPhotoAlbum(false)} />
+          <div>
+            <div style={{ position: 'fixed', top: '10px', left: '10px', background: 'red', color: 'white', padding: '10px', zIndex: 1000 }}>
+              DEBUG: Photo Album Active
+            </div>
+            <PhotoAlbum onClose={() => setShowPhotoAlbum(false)} />
+          </div>
         ) : showLetter ? (
-          <div style={{ position: 'relative', zIndex: 5 }}>
-            <div style={{ 
-              position: 'fixed', 
-              top: 0, 
-              left: 0, 
-              width: '100vw', 
-              height: '100vh',
-              zIndex: 1
-            }}>
-              {/* Letter content */}
-              <div style={{
-                background: 'rgba(255, 255, 255, 0.95)',
-                padding: 'clamp(20px, 5vw, 40px)',
-                margin: 'clamp(10px, 3vw, 20px)',
-                borderRadius: 'clamp(15px, 4vw, 20px)',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-                maxHeight: '80vh',
-                overflow: 'auto',
-                color: '#333',
-                fontSize: 'clamp(14px, 4vw, 18px)',
-                lineHeight: '1.6',
-                maxWidth: '90vw',
-                marginLeft: 'auto',
-                marginRight: 'auto'
+          <div>
+            <div style={{ position: 'fixed', top: '10px', left: '10px', background: 'blue', color: 'white', padding: '10px', zIndex: 1000 }}>
+              DEBUG: Letter Active
+            </div>
+            <div style={{ position: 'relative', zIndex: 5 }}>
+              <div style={{ 
+                position: 'fixed', 
+                top: 0, 
+                left: 0, 
+                width: '100vw', 
+                height: '100vh',
+                zIndex: 1
               }}>
-                <h1 style={{ 
-                  textAlign: 'center', 
-                  color: '#ff6b6b', 
-                  marginBottom: 'clamp(20px, 5vw, 30px)',
-                  fontSize: 'clamp(20px, 6vw, 28px)'
+                {/* Letter content */}
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  padding: 'clamp(20px, 5vw, 40px)',
+                  margin: 'clamp(10px, 3vw, 20px)',
+                  borderRadius: 'clamp(15px, 4vw, 20px)',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                  maxHeight: '80vh',
+                  overflow: 'auto',
+                  color: '#333',
+                  fontSize: 'clamp(14px, 4vw, 18px)',
+                  lineHeight: '1.6',
+                  maxWidth: '90vw',
+                  marginLeft: 'auto',
+                  marginRight: 'auto'
                 }}>
-                  💌 A Letter for My Love
-                </h1>
-                <p>My Dearest Babii,</p>
-                <p>Today is all about celebrating you - the incredible person who brings so much joy, love, and light into my life. I feel so lucky to call you mine. You've shown me what true love feels like, and every day with you is a beautiful adventure.</p>
-                <p>I love everything about you - your smile, your laugh, your strength, your kindness. You make me feel safe, supported, and deeply loved.</p>
-                <p>I'm so proud of the person you are and everything you're becoming. You're not just my partner, you're my best friend, my confidant, and my soulmate. I love you more than words can say, and I'm so grateful for every moment we share.</p>
-                <p>On your special day, I just want to say thank you. Thank you for being you. Thank you for letting me love you. And thank you for loving me right back. You are my today, my tomorrow, and my forever. My heart beats only for you.</p>
-                <p>Forever Yours,<br/>With All My Love ❤️</p>
+                  <h1 style={{ 
+                    textAlign: 'center', 
+                    color: '#ff6b6b', 
+                    marginBottom: 'clamp(20px, 5vw, 30px)',
+                    fontSize: 'clamp(20px, 6vw, 28px)'
+                  }}>
+                    💌 A Letter for My Love
+                  </h1>
+                  <p>My Dearest Babii,</p>
+                  <p>Today is all about celebrating you - the incredible person who brings so much joy, love, and light into my life. I feel so lucky to call you mine. You've shown me what true love feels like, and every day with you is a beautiful adventure.</p>
+                  <p>I love everything about you - your smile, your laugh, your strength, your kindness. You make me feel safe, supported, and deeply loved.</p>
+                  <p>I'm so proud of the person you are and everything you're becoming. You're not just my partner, you're my best friend, my confidant, and my soulmate. I love you more than words can say, and I'm so grateful for every moment we share.</p>
+                  <p>On your special day, I just want to say thank you. Thank you for being you. Thank you for letting me love you. And thank you for loving me right back. You are my today, my tomorrow, and my forever. My heart beats only for you.</p>
+                  <p>Forever Yours,<br/>With All My Love ❤️</p>
+                </div>
               </div>
             </div>
           </div>
         ) : showFlowers ? (
-          <div style={{ position: 'relative', zIndex: 5 }}>
-            <FlowerAnimation />
+          <div>
+            <div style={{ position: 'fixed', top: '10px', left: '10px', background: 'green', color: 'white', padding: '10px', zIndex: 1000 }}>
+              DEBUG: Flowers Active
+            </div>
+            <div style={{ position: 'relative', zIndex: 5 }}>
+              <FlowerAnimation />
+            </div>
           </div>
         ) : (wordIndex !== null || showGiftButton) && (
           <div style={{ 
