@@ -51,20 +51,6 @@ export default function FlowerAnimation() {
 
   return (
     <div className="flower-animation">
-      {/* Sun */}
-      <div className="sun" style={{
-        position: 'fixed',
-        top: 'clamp(20px, 8vw, 50px)',
-        right: 'clamp(20px, 8vw, 50px)',
-        width: 'clamp(60px, 15vw, 100px)',
-        height: 'clamp(60px, 15vw, 100px)',
-        background: 'radial-gradient(circle, #ffd700, #ff8c00)',
-        borderRadius: '50%',
-        boxShadow: '0 0 30px #ffd700, 0 0 60px #ffd700',
-        animation: 'sunPulse 3s ease-in-out infinite alternate',
-        zIndex: 10
-      }}>☀️</div>
-
       {/* Flowers */}
       {flowers.map((flower, index) => (
         <div

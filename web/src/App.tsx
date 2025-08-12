@@ -10,82 +10,16 @@ function App() {
   const [showFlowers, setShowFlowers] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
   const [showPhotoAlbum, setShowPhotoAlbum] = useState(false);
-  const [audioStarted, setAudioStarted] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [userInteracted, setUserInteracted] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const audioRef = useRef<HTMLAudioElement>(null)
   const words = ['HAPPY', 'BIRTHDAY', 'BABIII', 'ILOVEYOUUU']
   const glowStyle = {
     textShadow: '0 0 40px #ffe066, 0 0 80px #ffe066, 0 0 120px #ffe066',
-  };
-
-  // Handle user interaction to enable audio
-  const handleUserInteraction = () => {
-    if (!userInteracted) {
-      console.log('User interaction detected, enabling audio...');
-      setUserInteracted(true);
-      
-      // Preload and prepare audio
-      if (audioRef.current) {
-        audioRef.current.volume = 0.7;
-        audioRef.current.loop = true;
-        audioRef.current.load();
-      }
-    }
-  };
-
-  // Handle mute/unmute
-  const toggleMute = () => {
-    if (audioRef.current) {
-      if (isMuted) {
-        audioRef.current.volume = 1;
-        setIsMuted(false);
-      } else {
-        audioRef.current.volume = 0;
-        setIsMuted(true);
-      }
-    }
   };
 
   // Start countdown immediately
   useEffect(() => {
     setCountdown(3)
   }, [])
-
-  // Check audio file accessibility
-  useEffect(() => {
-    if (audioRef.current) {
-      console.log('Audio element created, checking file accessibility...');
-      
-      audioRef.current.addEventListener('loadstart', () => {
-        console.log('Audio loading started');
-      });
-      
-      audioRef.current.addEventListener('canplay', () => {
-        console.log('Audio can play');
-      });
-      
-      audioRef.current.addEventListener('canplaythrough', () => {
-        console.log('Audio can play through completely');
-      });
-      
-      audioRef.current.addEventListener('error', (e) => {
-        console.error('Audio error occurred:', e);
-        const audio = e.target as HTMLAudioElement;
-        if (audio.error) {
-          console.error('Audio error details:', {
-            code: audio.error.code,
-            message: audio.error.message
-          });
-        }
-      });
-      
-      audioRef.current.addEventListener('abort', () => {
-        console.log('Audio loading aborted');
-      });
-    }
-  }, []);
 
   // Countdown logic
   useEffect(() => {
@@ -96,28 +30,11 @@ function App() {
     } else if (countdown === 1) {
       const t = setTimeout(() => {
         setCountdown(null)
-        // Start audio automatically when "HAPPY" is about to appear
-        console.log('Countdown finished, attempting to start audio...');
-        if (audioRef.current && userInteracted && !audioStarted) {
-          console.log('User has interacted, starting audio automatically...');
-          audioRef.current.play().then(() => {
-            console.log('Audio started successfully!');
-            setAudioStarted(true);
-            // Small delay to ensure audio starts before text appears
-            setTimeout(() => setWordIndex(0), 500);
-          }).catch(error => {
-            console.error('Audio autoplay failed:', error);
-            // If autoplay fails, still show the text
-            setWordIndex(0);
-          });
-        } else {
-          console.log('Audio not ready or user not interacted, showing text without audio');
-          setWordIndex(0);
-        }
+        setWordIndex(0)
       }, 900)
       return () => clearTimeout(t)
     }
-  }, [countdown, audioStarted, userInteracted])
+  }, [countdown])
 
   // Animated words logic
   useEffect(() => {
@@ -208,101 +125,8 @@ function App() {
 
   return (
     <>
-      {/* Audio element for background music */}
-      <audio 
-        ref={audioRef}
-        preload="auto"
-        style={{ display: 'none' }}
-      >
-        <source src="/birthday-song.mp3" type="audio/mpeg" />
-        <source src="/birthday-song.ogg" type="audio/ogg" />
-        Your browser does not support the audio element.
-      </audio>
-      
-      {/* Audio control button */}
-      {audioStarted && (
-        <button
-          onClick={toggleMute}
-          style={{
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            zIndex: 10,
-            background: 'rgba(255, 224, 102, 0.9)',
-            border: 'none',
-            borderRadius: '50%',
-            width: '50px',
-            height: '50px',
-            fontSize: '20px',
-            cursor: 'pointer',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
-            transition: 'all 0.3s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.1)';
-            e.currentTarget.style.background = 'rgba(255, 224, 102, 1)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.background = 'rgba(255, 224, 102, 0.9)';
-          }}
-        >
-          {isMuted ? '🔇' : '🔊'}
-        </button>
-      )}
-
-      {/* User interaction prompt - shows before countdown starts */}
-      {!userInteracted && countdown !== null && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '85%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 15,
-            background: 'rgba(26, 26, 26, 0.95)',
-            padding: '30px',
-            borderRadius: '20px',
-            border: '2px solid #ffe066',
-            textAlign: 'center',
-            maxWidth: '400px',
-            boxShadow: '0 0 40px rgba(255, 224, 102, 0.3)',
-          }}
-        >
-          <h2 style={{ color: '#ffe066', marginBottom: '20px' }}>🎵 Ready for Your Song?</h2>
-          <p style={{ color: '#ffffff', marginBottom: '25px', lineHeight: '1.5' }}>
-            Click anywhere to enable the birthday music that will play when "HAPPY" appears!
-          </p>
-          <button
-            onClick={handleUserInteraction}
-            style={{
-              background: '#ffe066',
-              color: '#1a1a1a',
-              border: 'none',
-              padding: '15px 30px',
-              borderRadius: '25px',
-              fontSize: '18px',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              boxShadow: '0 0 20px rgba(255, 224, 102, 0.5)',
-              transition: 'all 0.3s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.05)';
-              e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 224, 102, 0.8)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 224, 102, 0.5)';
-            }}
-          >
-            🎵 Enable Music
-          </button>
-        </div>
-      )}
-      
       {/* Main container with click handler for audio enablement */}
-      <div onClick={handleUserInteraction} style={{ width: '100vw', height: '100vh' }}>
+      <div onClick={() => {}} style={{ width: '100vw', height: '100vh' }}>
         <canvas
           ref={canvasRef}
           style={{
@@ -318,61 +142,55 @@ function App() {
         
         {/* Overlay loading/countdown/words on top of matrix effect */}
         {showPhotoAlbum ? (
-          <div>
-            <PhotoAlbum onClose={() => setShowPhotoAlbum(false)} />
-          </div>
+          <PhotoAlbum onClose={() => setShowPhotoAlbum(false)} />
         ) : showLetter ? (
-          <div>
-            <div style={{ position: 'relative', zIndex: 5 }}>
-              <div style={{ 
-                position: 'fixed', 
-                top: 0, 
-                left: 0, 
-                width: '100vw', 
-                height: '100vh',
-                zIndex: 1
+          <div style={{ position: 'relative', zIndex: 5 }}>
+            <div style={{ 
+              position: 'fixed', 
+              top: 0, 
+              left: 0, 
+              width: '100vw', 
+              height: '100vh',
+              zIndex: 1
+            }}>
+              {/* Letter content */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                padding: 'clamp(20px, 5vw, 40px)',
+                margin: 'clamp(10px, 3vw, 20px)',
+                borderRadius: 'clamp(15px, 4vw, 20px)',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                maxHeight: '80vh',
+                overflow: 'auto',
+                color: '#333',
+                fontSize: 'clamp(14px, 4vw, 18px)',
+                lineHeight: '1.6',
+                maxWidth: '90vw',
+                marginLeft: 'auto',
+                marginRight: 'auto'
               }}>
-                {/* Letter content */}
-                <div style={{
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  padding: 'clamp(20px, 5vw, 40px)',
-                  margin: 'clamp(10px, 3vw, 20px)',
-                  borderRadius: 'clamp(15px, 4vw, 20px)',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-                  maxHeight: '80vh',
-                  overflow: 'auto',
-                  color: '#333',
-                  fontSize: 'clamp(14px, 4vw, 18px)',
-                  lineHeight: '1.6',
-                  maxWidth: '90vw',
-                  marginLeft: 'auto',
-                  marginRight: 'auto'
+                <h1 style={{ 
+                  textAlign: 'center', 
+                  color: '#ff6b6b', 
+                  marginBottom: 'clamp(20px, 5vw, 30px)',
+                  fontSize: 'clamp(20px, 6vw, 28px)'
                 }}>
-                  <h1 style={{ 
-                    textAlign: 'center', 
-                    color: '#ff6b6b', 
-                    marginBottom: 'clamp(20px, 5vw, 30px)',
-                    fontSize: 'clamp(20px, 6vw, 28px)'
-                  }}>
-                    💌 A Letter for My Love
-                  </h1>
-                  <p>My Dearest Babii,</p>
-                  <p>Today is all about celebrating you - the incredible person who brings so much joy, love, and light into my life. I feel so lucky to call you mine. You've shown me what true love feels like, and every day with you is a beautiful adventure.</p>
-                  <p>I love everything about you - your smile, your laugh, your strength, your kindness. You make me feel safe, supported, and deeply loved.</p>
-                  <p>I'm so proud of the person you are and everything you're becoming. You're not just my partner, you're my best friend, my confidant, and my soulmate. I love you more than words can say, and I'm so grateful for every moment we share.</p>
-                  <p>On your special day, I just want to say thank you. Thank you for being you. Thank you for letting me love you. And thank you for loving me right back. You are my today, my tomorrow, and my forever. My heart beats only for you.</p>
-                  <p>Forever Yours,<br/>With All My Love ❤️</p>
-                </div>
+                  💌 A Letter for My Love
+                </h1>
+                <p>My Dearest Babii,</p>
+                <p>Today is all about celebrating you - the incredible person who brings so much joy, love, and light into my life. I feel so lucky to call you mine. You've shown me what true love feels like, and every day with you is a beautiful adventure.</p>
+                <p>I love everything about you - your smile, your laugh, your strength, your kindness. You make me feel safe, supported, and deeply loved.</p>
+                <p>I'm so proud of the person you are and everything you're becoming. You're not just my partner, you're my best friend, my confidant, and my soulmate. I love you more than words can say, and I'm so grateful for every moment we share.</p>
+                <p>On your special day, I just want to say thank you. Thank you for being you. Thank you for letting me love you. And thank you for loving me right back. You are my today, my tomorrow, and my forever. My heart beats only for you.</p>
+                <p>Forever Yours,<br/>With All My Love ❤️</p>
               </div>
             </div>
           </div>
         ) : showFlowers ? (
-          <div>
-            <div style={{ position: 'relative', zIndex: 5 }}>
-              <FlowerAnimation />
-            </div>
+          <div style={{ position: 'relative', zIndex: 5 }}>
+            <FlowerAnimation />
           </div>
-        ) : (wordIndex !== null || showGiftButton) && (
+        ) : (countdown !== null || wordIndex !== null || showGiftButton) && (
           <div style={{ 
             position: 'fixed', 
             top: 0, 
@@ -457,107 +275,6 @@ function App() {
                 </button>
               </div>
             )}
-          </div>
-        )}
-
-        {/* Audio element */}
-        <audio
-          ref={audioRef}
-          src="/birthday-song.mp3"
-          preload="auto"
-          onCanPlayThrough={() => {
-            console.log('Audio can play through');
-            if (userInteracted && !audioStarted) {
-              audioRef.current?.play().then(() => {
-                setAudioStarted(true);
-                console.log('Audio started playing');
-              }).catch(err => {
-                console.error('Failed to play audio:', err);
-              });
-            }
-          }}
-          onError={(e) => {
-            console.error('Audio error:', e);
-          }}
-        />
-
-        {/* Floating mute/unmute button */}
-        {userInteracted && (
-          <button
-            onClick={toggleMute}
-            style={{
-              position: 'fixed',
-              bottom: 'clamp(20px, 5vw, 30px)',
-              right: 'clamp(20px, 5vw, 30px)',
-              background: 'rgba(255, 215, 0, 0.9)',
-              color: '#1a1a1a',
-              border: 'none',
-              borderRadius: '50%',
-              width: 'clamp(50px, 12vw, 70px)',
-              height: 'clamp(50px, 12vw, 70px)',
-              fontSize: 'clamp(20px, 5vw, 28px)',
-              cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-              zIndex: 1000,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.1)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            {isMuted ? '🔇' : '🔊'}
-          </button>
-        )}
-
-        {/* User interaction prompt */}
-        {!userInteracted && (
-          <div style={{
-            position: 'fixed',
-            top: '85%',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 1000,
-            textAlign: 'center',
-            background: 'rgba(0, 0, 0, 0.8)',
-            color: '#ffe066',
-            padding: 'clamp(15px, 4vw, 25px)',
-            borderRadius: 'clamp(15px, 4vw, 25px)',
-            fontSize: 'clamp(14px, 3.5vw, 18px)',
-            maxWidth: '90vw',
-            backdropFilter: 'blur(10px)'
-          }}>
-            <p style={{ margin: '0 0 clamp(10px, 2.5vw, 15px) 0' }}>
-              Ready for Your Song? 🎵
-            </p>
-            <button
-              onClick={handleUserInteraction}
-              style={{
-                background: 'rgba(255, 215, 0, 0.9)',
-                color: '#1a1a1a',
-                border: 'none',
-                padding: 'clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px)',
-                borderRadius: 'clamp(15px, 4vw, 20px)',
-                fontSize: 'clamp(12px, 3vw, 16px)',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                boxShadow: '0 4px 15px rgba(255, 215, 0, 0.3)',
-                transition: 'all 0.3s ease',
-                minWidth: 'clamp(100px, 25vw, 150px)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              Click Here! ✨
-            </button>
           </div>
         )}
       </div>
